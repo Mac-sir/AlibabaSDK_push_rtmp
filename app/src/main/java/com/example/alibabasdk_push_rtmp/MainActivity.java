@@ -22,6 +22,7 @@ import com.alivc.live.pusher.AlivcLivePushInfoListener;
 import com.alivc.live.pusher.AlivcLivePushStatsInfo;
 import com.alivc.live.pusher.AlivcLivePusher;
 import com.alivc.live.pusher.AlivcPreviewOrientationEnum;
+import com.alivc.live.pusher.AlivcQualityModeEnum;
 import com.alivc.live.pusher.AlivcResolutionEnum;
 
 import java.io.File;
@@ -41,22 +42,27 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_main);
-        AlivcLivePusher.getSDKVersion();
         mAlivcLivePushConfig = new AlivcLivePushConfig();
-        if (mAlivcLivePushConfig.getPreviewOrientation() == AlivcPreviewOrientationEnum.ORIENTATION_LANDSCAPE_HOME_RIGHT.getOrientation() || mAlivcLivePushConfig.getPreviewOrientation() == AlivcPreviewOrientationEnum.ORIENTATION_LANDSCAPE_HOME_LEFT.getOrientation()) {
+        /*if (mAlivcLivePushConfig.getPreviewOrientation() == AlivcPreviewOrientationEnum.ORIENTATION_LANDSCAPE_HOME_RIGHT.getOrientation() || mAlivcLivePushConfig.getPreviewOrientation() == AlivcPreviewOrientationEnum.ORIENTATION_LANDSCAPE_HOME_LEFT.getOrientation()) {
             mAlivcLivePushConfig.setNetworkPoorPushImage(getFilesDir().getPath() + File.separator + "alivc_resource/poor_network_land.png");
             mAlivcLivePushConfig.setPausePushImage(getFilesDir().getPath() + File.separator + "alivc_resource/background_push_land.png");
         } else {
             mAlivcLivePushConfig.setNetworkPoorPushImage(getFilesDir().getPath() + File.separator + "alivc_resource/poor_network.png");
             mAlivcLivePushConfig.setPausePushImage(getFilesDir().getPath() + File.separator + "alivc_resource/background_push.png");
-        }
-        AlivcLivePushConfig.setMediaProjectionPermissionResultData(null);
+        }*/
+        mAlivcLivePushConfig.setVideoOnly(true);
+
+        /*mAlivcLivePushConfig.setResolution(AlivcResolutionEnum.RESOLUTION_720P);
+        mAlivcLivePushConfig.setQualityMode(AlivcQualityModeEnum.QM_RESOLUTION_FIRST);
+        mAlivcLivePushConfig.setPreviewOrientation(AlivcPreviewOrientationEnum.ORIENTATION_LANDSCAPE_HOME_LEFT);*/
+
+        //AlivcLivePushConfig.setMediaProjectionPermissionResultData(null);
         initView();
         setClick();
-        getSystemService(Context.CLIPBOARD_SERVICE);
+        //getSystemService(Context.CLIPBOARD_SERVICE);
     }
 
     private void initView() {
@@ -102,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private AlivcLivePushConfig getPushConfig() {
-        mAlivcLivePushConfig.setResolution(AlivcResolutionEnum.RESOLUTION_540P);
+        //mAlivcLivePushConfig.setResolution(AlivcResolutionEnum.RESOLUTION_540P);
         return mAlivcLivePushConfig;
     }
     @Override
@@ -114,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                     mAlivcLivePushConfig.setMediaProjectionPermissionResultData(data);
                     if (mAlivcLivePushConfig.getMediaProjectionPermissionResultData() != null) {
                         if (mAlivcLivePusher == null) {
-                            startPushWithoutSurface("rtmp://106.52.180.133:1935/live/10");
+                            startPushWithoutSurface("rtmp://47.113.106.45/live/9");
                         } else {
                             stopPushWithoutSurface();
                         }
@@ -259,12 +265,12 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         try {
-            mAlivcLivePusher.startPush(url);
+            mAlivcLivePusher.startPushAysnc(url);
         } catch (Exception e) {
             Log.i("TAG","startPush failed");
             return;
         }
-        mAlivcLivePusher.setPreviewOrientation(AlivcPreviewOrientationEnum.ORIENTATION_LANDSCAPE_HOME_LEFT);
-        mAlivcLivePusher.setCaptureVolume(mCaptureVolume);
+        /*mAlivcLivePusher.setPreviewOrientation(AlivcPreviewOrientationEnum.ORIENTATION_LANDSCAPE_HOME_RIGHT);
+        mAlivcLivePusher.setCaptureVolume(0);*/
     }
 }
